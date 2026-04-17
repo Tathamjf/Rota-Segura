@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro</title>
+  <link rel="stylesheet" href="criarconta.css">
+  <script src="script.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+
+  <div class="left">
+    <center><h2>CADASTRO</h2></center>
+
+    <select id="tipo" onchange="mudarTipo()">
+      <option value="">Selecione o tipo</option>
+      <option value="responsavel">Responsável</option>
+      <option value="motorista">Motorista</option>
+      <option value="escola">Escola</option>
+    </select>
+
+    <input type="text" id="nome" placeholder="Nome">
+
+    <!--tipos de cadastro-->
+    <div id="responsavel" class="tipo">
+      <input type="text" placeholder="Nome do aluno">
+      <input type="text" placeholder="Série">
+    </div>
+    <div id="motorista" class="tipo">
+      <input type="text" placeholder="CNH">
+      <input type="text" placeholder="Placa do veículo">
+    </div>
+    <div id="escola" class="tipo">
+      <input type="text" placeholder="Nome da escola">
+      <input type="text" placeholder="Endereço">
+    </div>
+
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="senha" placeholder="Senha">
+
+    <button onclick="cadastrar()">Cadastrar</button>
+  </div>
+
+
+  <div class="right">
+    <img src="img/teste.avif" alt="ilustração">
+  </div>
+
+</div>
+
+
+</body>
+</html>

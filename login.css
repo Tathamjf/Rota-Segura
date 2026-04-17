@@ -5,7 +5,7 @@
 }
 
 body {
-    background: linear-gradient(135deg, #000000, #1a1a1a);
+    background: linear-gradient(135deg, #050d33, #18295e);
     font-family: 'Poppins', sans-serif;
     min-height: 100vh;
     display: flex;
@@ -14,12 +14,14 @@ body {
 }
 
 .login-container {
-    background: rgba(0,0,0,0.8);
+    background: linear-gradient(135deg, #0f247e, #18295e);
     padding: 40px;
     border-radius: 20px;
     width: 400px;
     border: 1px solid rgba(255,255,255,0.2);
     backdrop-filter: blur(10px);
+    overflow: hidden;
+     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
 .logo {
@@ -28,7 +30,7 @@ body {
 }
 
 .logo h1 {
-    color: #ffcc00;
+    color: orange;
     font-size: 32px;
 }
 
@@ -55,7 +57,7 @@ input::placeholder {
 button {
     width: 100%;
     padding: 12px;
-    background: #ffcc00;
+    background: orange;
     color: black;
     border: none;
     border-radius: 8px;
@@ -66,7 +68,7 @@ button {
 }
 
 button:hover {
-    background: #ffdd33;
+    background: #c94f1f;
 }
 
 .links {
