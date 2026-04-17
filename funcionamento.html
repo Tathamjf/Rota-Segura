@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+
+    <title>Rota Segura | Início</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="funcionamento.css">
+
+</head>
+
+<body link="orange" alink="black" vlink="orange">
+
+
+<div class="exibicao">
+    <iframe src="" name="exibicao"></iframe>
+    <button onclick="fecharFrame()" style="position: absolute; top: 10px; right: 10px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+</div>
+
+<div class="menu">
+    <a href="cadastrodependente.html" target="exibicao" onclick="mostrarFrame()">Cadastrar Dependentes</a>
+    <a href="visualizardependente.html" target="exibicao" onclick="mostrarFrame()">Visualizar Dependentes</a>
+    <a href="notificarfalta.html" target="exibicao" onclick="mostrarFrame()">Notificar Ausência</a>
+    <a href="acompanharrota.html" target="exibicao" onclick="mostrarFrame()">Acompanhar Rota</a>
+     <a href="notificacoes.html" target="exibicao" onclick="mostrarFrame()">Notificações</a>
+    <a href="rotasegura.html" target="principal">Sair</a>
+</div>
+
+<script>
+  function mostrarFrame() {
+    document.querySelector('.exibicao').style.display = 'block';
+  }
+  
+  function fecharFrame() {
+    document.querySelector('.exibicao').style.display = 'none';
+  }
+</script>
+
+</body>
+
+</html>

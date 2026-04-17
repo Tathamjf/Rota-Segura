@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Rota Segura | Login</title>
+<link rel="stylesheet" type="text/css" href="login.css">
+
+
+</head>
+<body>
+
+<div class="login-container">
+    <div class="logo">
+        <h1>Rota Segura</h1>
+        <p>Presente em cada trajeto</p>
+    </div>
+    
+    <form id="loginForm">
+        <input type="text" id="usuario" placeholder="Usuário" required>
+        <input type="password" id="senha" placeholder="Senha" required>
+        <button type="submit">Entrar</button>
+    </form>
+    
+    <div class="links">
+        <a href="rotasegura.html">Rota Segura | Página Inicial</a>
+
+    </div>
+</div>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    var usuario = document.getElementById('usuario').value;
+    var senha = document.getElementById('senha').value;
+    
+    // Apenas conta de responsável
+    if(usuario === "responsavel" && senha === "123") {
+        window.location.href ="funcionamento.html";
+    } else {
+        alert("❌ Usuário ou senha incorretos!");
+    }
+});
+</script>
+
+</body>
+</html>
