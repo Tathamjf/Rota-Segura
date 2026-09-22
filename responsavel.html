@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Rota Segura</title>
+    <link rel="stylesheet" type="text/css" href="responsavel.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="titulo">
+        <h1>🚍 Rota Segura</h1>
+        <p>Presente em cada trajeto</p>
+    </div>
+
+    <div class="card">
+        <div class="menu">
+            <button onclick="mudarTela('cadastro')"> Cadastrar</button>
+            <button onclick="mudarTela('visualizar')"> Visualizar</button>
+            <button onclick="mudarTela('ausencia')"> Notificar Ausência</button>
+            <button onclick="mudarTela('rota')"> Rota</button>
+            <button onclick="mudarTela('notificacoes')"> Notificações</button>
+            <button onclick="sair()" class="btn-sair"> Sair</button>
+        </div>
+
+        <!-- Tela Cadastro -->
+        <div id="telaCadastro" class="conteudo">
+            <h2>Cadastrar Dependente</h2>
+            <form id="formCadastro">
+                <div class="form-group">
+                    <label>Nome:</label>
+                    <input type="text" id="nome" placeholder="Insira o nome completo" required>
+                    <label>Data de Nascimento</label>
+                    <input type="date" id="dataNasc">
+                    <label>Escola</label>
+                    <input type="text" id="escola" placeholder="Insira o nome da escola">
+                    <label>Endereço de Embarque</label>
+                    <input type="text" id="embarque" placeholder="Insira o endereço">
+                    <label>Endereço de Desembarque</label>
+                    <input type="text" id="desembarque" placeholder="Insira o endereço">
+                    <label>Turno</label>
+                    <select id="turno">
+                        <option>Manhã</option>
+                        <option>Tarde</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Salvar</button>
+            </form>
+            <div id="msgCadastro" class="feedback"></div>
+        </div>
+
+        <!-- Tela Visualizar -->
+        <div id="telaVisualizar" class="conteudo esconder">
+            <h2>Meus Dependentes</h2>
+            <div id="listaDep" class="lista"></div>
+        </div>
+
+        <!-- Tela Ausência -->
+        <div id="telaAusencia" class="conteudo esconder">
+            <h2>Notificar Ausência</h2>
+            <div class="form-group">
+                <label>Dependente:</label>
+                <select id="selectDep"></select>
+            </div>
+            <div class="form-group">
+                <label>Data da Ausência:</label>
+                <input type="date" id="dataAusencia">
+            </div>
+            <div class="form-group">
+                <label>Tipo:</label>
+                <select id="tipoAusencia">
+                    <option value="" disabled selected>-- Selecione o tipo --</option>
+                    <option>Problemas de saúde</option>
+                    <option>Compromissos pessoais</option>
+                    <option>Outros</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Descrição (opcional):</label>
+                <input type="text" id="motivo" placeholder="Detalhe o motivo...">
+            </div>
+            <button onclick="notificar()" class="btn-primary">Enviar</button>
+            <div id="msgAusencia" class="feedback"></div>
+        </div>
+
+        <!-- Tela Rota -->
+        <div id="telaRota" class="conteudo esconder">
+            <h2>Acompanhar Rota</h2>
+            <div class="rota-box">
+                
+                <img id="mapaRota" src="mapa.jpg" alt="Mapa da rota em tempo real" style="width: 100%; max-width: 500px; border-radius: 10px; margin-bottom: 15px;">
+                
+                <div style="font-size: 40px;"></div>
+                <p style="margin-top: 15px;"><strong>Status:</strong> Em andamento</p>
+                <p><strong>Próxima parada:</strong> Rua Principal, 123</p>
+                <p><strong>Previsão:</strong> 15 min</p>
+                <button onclick="atualizarRota()" style="margin-top: 15px;">Atualizar Localização</button>
+            </div>
+        </div>
+
+        <!-- Tela Notificações -->
+        <div id="telaNotificacoes" class="conteudo esconder">
+            <h2>Notificações</h2>
+            <div id="listaNotif"></div>
+            <button onclick="limparNotif()" class="btn-primary" style="margin-top: 10px;">Limpar tudo</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let dependentes = [
+        { id: 1, nome: "Agatha Moreira", presente: true },
+        { id: 2, nome: "Fellipe Augusto", presente: true },
+        { id: 3, nome: "Henrique Ribeiro", presente: true },
+        { id: 4, nome: "Luísa Herrera", presente: true },
+        { id: 5, nome: "Sabrina Gonçalves", presente: true }
+    ];
+
+    let notificacoes = [
+        { id: 1, texto: "Agatha embarcou no ônibus", data: "Hoje 07:30", lida: false },
+        { id: 2, texto: "Rota atrasada 5 min", data: "Hoje 07:15", lida: false }
+    ];
+
+    let proxId = 6;
+
+    function mudarTela(tela) {
+        document.querySelectorAll('.conteudo').forEach(div => {
+            div.classList.add('esconder');
+        });
+        
+        if(tela === 'cadastro') document.getElementById('telaCadastro').classList.remove('esconder');
+        else if(tela === 'visualizar') {
+            document.getElementById('telaVisualizar').classList.remove('esconder');
+            mostrarDependentes();
+        }
+        else if(tela === 'ausencia') {
+            document.getElementById('telaAusencia').classList.remove('esconder');
+            atualizarSelect();
+        }
+        else if(tela === 'rota') document.getElementById('telaRota').classList.remove('esconder');
+        else if(tela === 'notificacoes') {
+            document.getElementById('telaNotificacoes').classList.remove('esconder');
+            mostrarNotificacoes();
+        }
+    }
+
+    function mostrarDependentes() {
+        const div = document.getElementById('listaDep');
+        if(dependentes.length === 0) {
+            div.innerHTML = '<p style="text-align:center;">Nenhum dependente cadastrado</p>';
+            return;
+        }
+        
+        let html = '';
+        dependentes.forEach(dep => {
+            html += `
+                <div class="item-dep">
+                    <span class="nome">${dep.nome}</span>
+                    <div>
+                        <span class="status ${dep.presente ? 'presente' : 'ausente'}">
+                            ${dep.presente ? 'Presente' : 'Ausente'}
+                        </span>
+                        <button onclick="togglePresenca(${dep.id})">Alterar</button>
+                        <button onclick="deletarDependente(${dep.id})" class="btn-deletar">Deletar</button>
+                    </div>
+                </div>
+            `;
+        });
+        div.innerHTML = html;
+    }
+
+    window.deletarDependente = function(id) {
+        const dep = dependentes.find(d => d.id === id);
+        if(confirm(`Tem certeza que quer deletar ${dep.nome}?`)) {
+            dependentes = dependentes.filter(d => d.id !== id);
+            
+            notificacoes.unshift({
+                id: Date.now(),
+                texto: `${dep.nome} foi removido(a) da lista de dependentes`,
+                data: new Date().toLocaleString(),
+                lida: false
+            });
+            
+            mostrarDependentes();
+            atualizarSelect();
+            
+            const msg = document.createElement('div');
+            msg.className = 'feedback sucesso';
+            msg.innerHTML = `${dep.nome} foi deletado(a) com sucesso!`;
+            document.getElementById('telaVisualizar').appendChild(msg);
+            setTimeout(() => msg.remove(), 2000);
+        }
+    };
+
+    window.togglePresenca = function(id) {
+        const dep = dependentes.find(d => d.id === id);
+        if(dep) {
+            dep.presente = !dep.presente;
+            mostrarDependentes();
+            
+            notificacoes.unshift({
+                id: Date.now(),
+                texto: `${dep.nome} agora está ${dep.presente ? 'presente' : 'ausente'}`,
+                data: new Date().toLocaleTimeString(),
+                lida: false
+            });
+        }
+    };
+
+    function atualizarSelect() {
+        const select = document.getElementById('selectDep');
+        let html = '<option value="">Selecione</option>';
+        dependentes.forEach(dep => {
+            html += `<option value="${dep.id}">${dep.nome}</option>`;
+        });
+        select.innerHTML = html;
+    }
+
+    window.notificar = function() {
+        const select = document.getElementById('selectDep');
+        const tipo = document.getElementById('tipoAusencia');
+        const motivo = document.getElementById('motivo');
+        const dataAusencia = document.getElementById('dataAusencia');
+        
+        if(!select.value) {
+            document.getElementById('msgAusencia').innerHTML = '<div class="feedback erro">Selecione um dependente!</div>';
+            setTimeout(() => document.getElementById('msgAusencia').innerHTML = '', 2000);
+            return;
+        }
+        
+        if(!tipo.value) {
+            document.getElementById('msgAusencia').innerHTML = '<div class="feedback erro">Selecione o tipo de ausência!</div>';
+            setTimeout(() => document.getElementById('msgAusencia').innerHTML = '', 2000);
+            return;
+        }
+        
+        const dep = dependentes.find(d => d.id === parseInt(select.value));
+        
+        let dataTexto = '';
+        if(dataAusencia.value) {
+            const data = new Date(dataAusencia.value);
+            dataTexto = data.toLocaleDateString('pt-BR');
+        } else {
+            dataTexto = new Date().toLocaleDateString('pt-BR');
+        }
+        
+        const textoMotivo = motivo.value.trim() ? ` - ${motivo.value.trim()}` : '';
+        const textoNotificacao = `AUSÊNCIA: ${dep.nome} - ${tipo.value}${textoMotivo} (${dataTexto})`;
+        
+        notificacoes.unshift({
+            id: Date.now(),
+            texto: textoNotificacao,
+            data: new Date().toLocaleString(),
+            lida: false
+        });
+        
+        dep.presente = false;
+        
+        document.getElementById('msgAusencia').innerHTML = '<div class="feedback sucesso">Notificação enviada com sucesso!</div>';
+        setTimeout(() => document.getElementById('msgAusencia').innerHTML = '', 2000);
+        
+        select.value = '';
+        document.getElementById('tipoAusencia').value = '';
+        document.getElementById('motivo').value = '';
+        document.getElementById('dataAusencia').value = '';
+        
+        mostrarDependentes();
+    };
+
+    function mostrarNotificacoes() {
+        const div = document.getElementById('listaNotif');
+        if(notificacoes.length === 0) {
+            div.innerHTML = '<p style="text-align:center;">Sem notificações</p>';
+            return;
+        }
+        
+        let html = '';
+        notificacoes.forEach(notif => {
+            html += `
+                <div class="notificacao" style="opacity: ${notif.lida ? 0.6 : 1}">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>${notif.texto}</span>
+                        <small>${notif.data}</small>
+                    </div>
+                    ${!notif.lida ? `<button onclick="marcarLida(${notif.id})" style="margin-top: 8px;">✓ Marcar lida</button>` : ''}
+                </div>
+            `;
+        });
+        div.innerHTML = html;
+    }
+
+    window.marcarLida = function(id) {
+        const notif = notificacoes.find(n => n.id === id);
+        if(notif) notif.lida = true;
+        mostrarNotificacoes();
+    };
+
+    window.limparNotif = function() {
+        notificacoes = [];
+        mostrarNotificacoes();
+    };
+
+    window.atualizarRota = function() {
+        alert('🔄 Localização atualizada! Ônibus está na Rua das Flores.');
+        
+    };
+
+    document.getElementById('formCadastro').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const nome = document.getElementById('nome').value.trim();
+        
+        if(!nome) {
+            document.getElementById('msgCadastro').innerHTML = '<div class="feedback erro">Digite um nome!</div>';
+            setTimeout(() => document.getElementById('msgCadastro').innerHTML = '', 2000);
+            return;
+        }
+        
+        dependentes.push({
+            id: proxId++,
+            nome: nome,
+            presente: true
+        });
+        
+        document.getElementById('nome').value = '';
+        document.getElementById('dataNasc').value = '';
+        document.getElementById('escola').value = '';
+        document.getElementById('embarque').value = '';
+        document.getElementById('desembarque').value = '';
+        
+        document.getElementById('msgCadastro').innerHTML = '<div class="feedback sucesso">Cadastrado com sucesso!</div>';
+        setTimeout(() => document.getElementById('msgCadastro').innerHTML = '', 2000);
+        
+        atualizarSelect();
+    });
+
+    window.sair = function() {
+    if(confirm('Sair do sistema?')) {
+        window.location.href = 'login.html';
+    }
+};
+
+    mudarTela('visualizar');
+</script>
+
+</body>
+</html>

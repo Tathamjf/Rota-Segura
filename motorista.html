@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Rota Segura - Motorista</title>
+    <link rel="stylesheet" type="text/css" href="motorista.css">
+    
+
+</head>
+<body>
+
+<div class="container">
+    <div class="titulo">
+        <h1>🚍 Rota Segura</h1>
+        <p>Painel do Motorista</p>
+    </div>
+
+    <div class="card">
+        <div class="menu">
+            <button onclick="mudarTela('veiculo')">Cadastrar Veículo</button>
+            <button onclick="mudarTela('visualizarVeiculo')">Meu Veículo</button>
+            <button onclick="mudarTela('rotas')">Cadastrar Rota</button>
+            <button onclick="mudarTela('visualizarRotas')">Minhas Rotas</button>
+            <button onclick="sair()" class="btn-sair">Sair</button>
+        </div>
+
+        <!-- Tela Cadastrar Veículo -->
+        <div id="telaVeiculo" class="conteudo">
+            <h2>Cadastrar Veículo</h2>
+            <form id="formVeiculo">
+                <div class="form-group">
+                    <label>Marca:</label>
+                    <input type="text" id="marca" placeholder="Ex: Mercedes-Benz, Ford, Volkswagen" required>
+                </div>
+                <div class="form-group">
+                    <label>Modelo:</label>
+                    <input type="text" id="modelo" placeholder="Ex: Sprinter, Transit, Constellation" required>
+                </div>
+                <div class="form-group">
+                    <label>Ano:</label>
+                    <input type="number" id="ano" placeholder="Ex: 2022" required>
+                </div>
+                <div class="form-group">
+                    <label>Placa:</label>
+                    <input type="text" id="placa" placeholder="Ex: ABC-1234" required>
+                </div>
+                <div class="form-group">
+                    <label>Capacidade (alunos):</label>
+                    <input type="number" id="capacidade" placeholder="Ex: 20" required>
+                </div>
+                <div class="form-group">
+                    <label>Cor:</label>
+                    <input type="text" id="cor" placeholder="Ex: Branca">
+                </div>
+                <button type="submit" class="btn-primary"> Salvar Veículo</button>
+            </form>
+            <div id="msgVeiculo" class="feedback"></div>
+        </div>
+
+        <!-- Tela Meu Veículo-->
+        <div id="telaVisualizarVeiculo" class="conteudo esconder">
+            <h2>Meu Veículo</h2>
+            <div id="infoVeiculo" class="rota-box" style="text-align: left;">
+                <!-- Veículo demonstrativo fixo -->
+                <p><strong>Marca:</strong> Mercedes-Benz</p>
+                <p><strong>Modelo:</strong> Sprinter</p>
+                <p><strong>Ano:</strong> 2022</p>
+                <p><strong>Placa:</strong> ABC-1234</p>
+                <p><strong>Capacidade:</strong> 20 alunos</p>
+                <p><strong>Cor:</strong> Branca</p>
+            </div>
+        </div>
+
+        <!-- Tela Cadastrar Rota -->
+        <div id="telaRotas" class="conteudo esconder">
+            <h2>Cadastrar Nova Rota</h2>
+            <form id="formRota">
+                <div class="form-group">
+                    <label>Nome da Rota:</label>
+                    <input type="text" id="nomeRota" placeholder="Ex: Rota Sul" required>
+                </div>
+                <div class="form-group">
+                    <label>Horário:</label>
+                    <input type="text" id="horarioRota" placeholder="Ex: 07:00 - 17:00" required>
+                </div>
+                <div class="form-group">
+                    <label>Endereço de Partida:</label>
+                    <input type="text" id="partida" placeholder="Ex: Rua das Flores, 123" required>
+                </div>
+                <div class="form-group">
+                    <label>Endereço de Destino:</label>
+                    <input type="text" id="destino" placeholder="Ex: Escola Municipal" required>
+                </div>
+                <div class="form-group">
+                    <label>Alunos (separar por vírgula):</label>
+                    <textarea id="alunosRota" rows="3" placeholder="Ex: Agatha Moreira, Fellipe Augusto, Sabrina Gonçalves" style="width:100%; padding:10px; border-radius:8px;"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Salvar Rota</button>
+            </form>
+            <div id="msgRota" class="feedback"></div>
+        </div>
+
+        <!-- Tela Minhas Rotas -->
+        <div id="telaVisualizarRotas" class="conteudo esconder">
+            <h2>Minhas Rotas</h2>
+            <div id="listaRotas" class="lista">
+                <!-- Rotas demonstrativas fixas -->
+                <div class="item-dep" style="flex-direction:column; align-items:flex-start;">
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <span class="nome">Rota Sul</span>
+                        <span>07:00 - 17:00</span>
+                    </div>
+                    <div style="margin-top:5px;">📍 Partida: Rua das Flores, 123</div>
+                    <div style="margin-bottom:5px;">📍 Destino: Escola Municipal</div>
+                    <div style="margin-top:10px;">
+                        <strong> Alunos:</strong>
+                        <div style="margin-top:5px;">Agatha Moreira, Fellipe Augusto, Sabrina Gonçalves</div>
+                    </div>
+                </div>
+                <div class="item-dep" style="flex-direction:column; align-items:flex-start;">
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <span class="nome">Rota Norte</span>
+                        <span>07:30 - 16:30</span>
+                    </div>
+                    <div style="margin-top:5px;">📍 Partida: Av. Principal, 456</div>
+                    <div style="margin-bottom:5px;">📍 Destino: Colégio Estadual</div>
+                    <div style="margin-top:10px;">
+                        <strong> Alunos:</strong>
+                        <div style="margin-top:5px;">Henrique Ribeiro, Luísa Herrera</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Dados do veículo
+    let veiculo = null;
+    let rotas = [];
+
+    function mostrarVeiculo() {
+        const div = document.getElementById('infoVeiculo');
+        if(veiculo) {
+            div.innerHTML = `
+                <p><strong>Marca:</strong> ${veiculo.marca}</p>
+                <p><strong>Modelo:</strong> ${veiculo.modelo}</p>
+                <p><strong>Ano:</strong> ${veiculo.ano}</p>
+                <p><strong>Placa:</strong> ${veiculo.placa}</p>
+                <p><strong>Capacidade:</strong> ${veiculo.capacidade} alunos</p>
+                <p><strong>Cor:</strong> ${veiculo.cor || "Não informada"}</p>
+            `;
+        } else {
+            div.innerHTML = `
+                <p><strong>Marca:</strong> Mercedes-Benz</p>
+                <p><strong>Modelo:</strong> Sprinter</p>
+                <p><strong>Ano:</strong> 2022</p>
+                <p><strong>Placa:</strong> ABC-1234</p>
+                <p><strong>Capacidade:</strong> 20 alunos</p>
+                <p><strong>Cor:</strong> Branca</p>
+            `;
+        }
+    }
+
+    function mostrarRotas() {
+        const div = document.getElementById('listaRotas');
+        
+        // Rotas fixas de exemplo
+        let html = `
+            <div class="item-dep" style="flex-direction:column; align-items:flex-start;">
+                <div style="display:flex; justify-content:space-between; width:100%;">
+                    <span class="nome"> Rota Sul</span>
+                    <span>07:00 - 17:00</span>
+                </div>
+                <div style="margin-top:5px;">📍 Partida: Rua das Flores, 123</div>
+                <div style="margin-bottom:5px;">📍 Destino: Escola Municipal</div>
+                <div style="margin-top:10px;">
+                    <strong>Alunos:</strong>
+                    <div style="margin-top:5px;">Agatha Moreira, Fellipe Augusto, Sabrina Gonçalves</div>
+                </div>
+            </div>
+            <div class="item-dep" style="flex-direction:column; align-items:flex-start;">
+                <div style="display:flex; justify-content:space-between; width:100%;">
+                    <span class="nome">Rota Norte</span>
+                    <span>07:30 - 16:30</span>
+                </div>
+                <div style="margin-top:5px;">📍 Partida: Av. Principal, 456</div>
+                <div style="margin-bottom:5px;">📍 Destino: Colégio Estadual</div>
+                <div style="margin-top:10px;">
+                    <strong>Alunos:</strong>
+                    <div style="margin-top:5px;">Henrique Ribeiro, Luísa Herrera</div>
+                </div>
+            </div>
+        `;
+        
+        // Adiciona rotas cadastradas pelo usuário
+        if(rotas.length > 0) {
+            for(let i = 0; i < rotas.length; i++) {
+                let rota = rotas[i];
+                html += `
+                    <div class="item-dep" style="flex-direction:column; align-items:flex-start;">
+                        <div style="display:flex; justify-content:space-between; width:100%;">
+                            <span class="nome"> ${rota.nome}</span>
+                            <span> ${rota.horario}</span>
+                        </div>
+                        <div style="margin-top:5px;">📍 Partida: ${rota.partida}</div>
+                        <div style="margin-bottom:5px;">📍 Destino: ${rota.destino}</div>
+                        <div style="margin-top:10px;">
+                            <strong>Alunos:</strong>
+                            <div style="margin-top:5px;">${rota.alunos}</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        div.innerHTML = html;
+    }
+
+    function mudarTela(tela) {
+        document.querySelectorAll('.conteudo').forEach(div => {
+            div.classList.add('esconder');
+        });
+        
+        if(tela === 'veiculo') {
+            document.getElementById('telaVeiculo').classList.remove('esconder');
+        }
+        else if(tela === 'visualizarVeiculo') {
+            document.getElementById('telaVisualizarVeiculo').classList.remove('esconder');
+            mostrarVeiculo();
+        }
+        else if(tela === 'rotas') {
+            document.getElementById('telaRotas').classList.remove('esconder');
+        }
+        else if(tela === 'visualizarRotas') {
+            document.getElementById('telaVisualizarRotas').classList.remove('esconder');
+            mostrarRotas();
+        }
+    }
+
+    // Cadastrar veículo
+    document.getElementById('formVeiculo').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let marca = document.getElementById('marca').value;
+        let modelo = document.getElementById('modelo').value;
+        let ano = document.getElementById('ano').value;
+        let placa = document.getElementById('placa').value;
+        let capacidade = document.getElementById('capacidade').value;
+        let cor = document.getElementById('cor').value;
+        
+        if(!marca || !modelo || !ano || !placa || !capacidade) {
+            document.getElementById('msgVeiculo').innerHTML = '<div class="feedback erro"> Preencha marca, modelo, ano, placa e capacidade!</div>';
+            setTimeout(() => document.getElementById('msgVeiculo').innerHTML = '', 2000);
+            return;
+        }
+        
+        veiculo = {
+            marca: marca,
+            modelo: modelo,
+            ano: ano,
+            placa: placa,
+            capacidade: capacidade,
+            cor: cor || "Não informada"
+        };
+        
+        document.getElementById('msgVeiculo').innerHTML = '<div class="feedback sucesso"> Veículo cadastrado com sucesso!</div>';
+        setTimeout(() => document.getElementById('msgVeiculo').innerHTML = '', 2000);
+        
+        // Limpa o formulário
+        document.getElementById('marca').value = '';
+        document.getElementById('modelo').value = '';
+        document.getElementById('ano').value = '';
+        document.getElementById('placa').value = '';
+        document.getElementById('capacidade').value = '';
+        document.getElementById('cor').value = '';
+        
+        // Atualiza a visualização
+        mostrarVeiculo();
+    });
+
+    // Cadastrar rota
+    document.getElementById('formRota').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let nome = document.getElementById('nomeRota').value;
+        let horario = document.getElementById('horarioRota').value;
+        let partida = document.getElementById('partida').value;
+        let destino = document.getElementById('destino').value;
+        let alunos = document.getElementById('alunosRota').value;
+        
+        if(!nome || !horario || !partida || !destino) {
+            document.getElementById('msgRota').innerHTML = '<div class="feedback erro"> Preencha todos os campos da rota!</div>';
+            setTimeout(() => document.getElementById('msgRota').innerHTML = '', 2000);
+            return;
+        }
+        
+        let novaRota = {
+            id: Date.now(),
+            nome: nome,
+            horario: horario,
+            partida: partida,
+            destino: destino,
+            alunos: alunos || "Nenhum aluno cadastrado"
+        };
+        
+        rotas.push(novaRota);
+        
+        document.getElementById('msgRota').innerHTML = '<div class="feedback sucesso"> Rota cadastrada com sucesso!</div>';
+        setTimeout(() => document.getElementById('msgRota').innerHTML = '', 2000);
+        
+        // Limpa o formulário
+        document.getElementById('nomeRota').value = '';
+        document.getElementById('horarioRota').value = '';
+        document.getElementById('partida').value = '';
+        document.getElementById('destino').value = '';
+        document.getElementById('alunosRota').value = '';
+        
+        mostrarRotas();
+    });
+
+    window.sair = function() {
+        if(confirm('Sair do sistema?')) {
+            window.location.href = 'login.html';
+        }
+    };
+
+    // Começa na tela do veículo
+    mudarTela('visualizarVeiculo');
+</script>
+
+</body>
+</html>

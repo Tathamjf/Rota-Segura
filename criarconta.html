@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <title>Cadastro</title>
   <link rel="stylesheet" href="criarconta.css">
-  <script src="script.js"></script>
+  
+    
 </head>
 <body>
 
 <div class="container">
-
 
   <div class="left">
     <center><h2>CADASTRO</h2></center>
@@ -18,31 +18,35 @@
       <option value="">Selecione o tipo</option>
       <option value="responsavel">Responsável</option>
       <option value="motorista">Motorista</option>
-      <option value="escola">Escola</option>
+      <option value="monitor">Monitor</option>
     </select>
 
-    <input type="text" id="nome" placeholder="Nome">
+    <input type="text" id="nome" placeholder="Nome completo">
 
-    <!--tipos de cadastro-->
+    <!-- Campos específicos por tipo -->
     <div id="responsavel" class="tipo">
-      <input type="text" placeholder="Nome do aluno">
-      <input type="text" placeholder="Série">
+      <input type="text" id="cpfResp" placeholder="CPF">
+      <input type="date" id="dataResp" placeholder="Data de Nascimento">
     </div>
+    
     <div id="motorista" class="tipo">
-      <input type="text" placeholder="CNH">
-      <input type="text" placeholder="Placa do veículo">
+      <input type="text" id="cnhMotorista" placeholder="CNH">
+      <input type="date" id="dataMotorista" placeholder="Data de Nascimento">
     </div>
-    <div id="escola" class="tipo">
-      <input type="text" placeholder="Nome da escola">
-      <input type="text" placeholder="Endereço">
+    
+    <div id="monitor" class="tipo">
+      <input type="text" id="docMonitor" placeholder="Documento (RG/CPF)">
+      <input type="date" id="dataMonitor" placeholder="Data de Nascimento">
     </div>
 
     <input type="email" id="email" placeholder="Email">
     <input type="password" id="senha" placeholder="Senha">
+    <input type="password" id="confirmarSenha" placeholder="Confirmar Senha">
 
     <button onclick="cadastrar()">Cadastrar</button>
+    <button onclick="voltarLogin()" class="btn-voltar">← Voltar para o Login</button>
+    <div id="mensagem" class="feedback"></div>
   </div>
-
 
   <div class="right">
     <img src="img/teste.avif" alt="ilustração">
@@ -50,6 +54,171 @@
 
 </div>
 
+<script>
+function mudarTipo() {
+  let tipo = document.getElementById('tipo').value;
+  
+  // Esconde todos
+  document.getElementById('responsavel').style.display = 'none';
+  document.getElementById('motorista').style.display = 'none';
+  document.getElementById('monitor').style.display = 'none';
+  
+  // Mostra o selecionado
+  if(tipo === 'responsavel') {
+    document.getElementById('responsavel').style.display = 'block';
+  } else if(tipo === 'motorista') {
+    document.getElementById('motorista').style.display = 'block';
+  } else if(tipo === 'monitor') {
+    document.getElementById('monitor').style.display = 'block';
+  }
+}
+
+function voltarLogin() {
+  window.location.href = 'login.html';
+}
+
+function cadastrar() {
+  let tipo = document.getElementById('tipo').value;
+  let nome = document.getElementById('nome').value;
+  let email = document.getElementById('email').value;
+  let senha = document.getElementById('senha').value;
+  let confirmar = document.getElementById('confirmarSenha').value;
+  
+  // Validação básica
+  if(!tipo) {
+    mostrarMsg('Selecione o tipo de usuário!', 'erro');
+    return;
+  }
+  
+  if(!nome) {
+    mostrarMsg('Digite o nome completo!', 'erro');
+    return;
+  }
+  
+  if(!email) {
+    mostrarMsg('Digite o email!', 'erro');
+    return;
+  }
+  
+  if(!senha) {
+    mostrarMsg('Digite a senha!', 'erro');
+    return;
+  }
+  
+  if(senha !== confirmar) {
+    mostrarMsg('As senhas não coincidem!', 'erro');
+    return;
+  }
+  
+  // Cadastro por tipo
+  if(tipo === 'responsavel') {
+    let cpf = document.getElementById('cpfResp').value;
+    let data = document.getElementById('dataResp').value;
+    
+    if(!cpf) {
+      mostrarMsg('Digite o CPF!', 'erro');
+      return;
+    }
+    if(!data) {
+      mostrarMsg('Digite a data de nascimento!', 'erro');
+      return;
+    }
+    if(cpf.length < 11) {
+      mostrarMsg('CPF inválido!', 'erro');
+      return;
+    }
+    
+    // Salvar no localStorage
+    let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    usuarios.push({
+      tipo: 'responsavel',
+      nome: nome,
+      email: email,
+      cpf: cpf,
+      data: data,
+      senha: senha
+    });
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    
+    mostrarMsg('✅ Responsável cadastrado com sucesso!', 'sucesso');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 2000);
+  }
+  
+  else if(tipo === 'motorista') {
+    let cnh = document.getElementById('cnhMotorista').value;
+    let data = document.getElementById('dataMotorista').value;
+    
+    if(!cnh) {
+      mostrarMsg('Digite a CNH!', 'erro');
+      return;
+    }
+    if(!data) {
+      mostrarMsg('Digite a data de nascimento!', 'erro');
+      return;
+    }
+    if(cnh.length < 5) {
+      mostrarMsg('CNH inválida!', 'erro');
+      return;
+    }
+    
+    let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    usuarios.push({
+      tipo: 'motorista',
+      nome: nome,
+      email: email,
+      cnh: cnh,
+      data: data,
+      senha: senha
+    });
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    
+    mostrarMsg('✅ Motorista cadastrado com sucesso!', 'sucesso');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 2000);
+  }
+  
+  else if(tipo === 'monitor') {
+    let doc = document.getElementById('docMonitor').value;
+    let data = document.getElementById('dataMonitor').value;
+    
+    if(!doc) {
+      mostrarMsg('Digite o documento!', 'erro');
+      return;
+    }
+    if(!data) {
+      mostrarMsg('Digite a data de nascimento!', 'erro');
+      return;
+    }
+    
+    let usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+    usuarios.push({
+      tipo: 'monitor',
+      nome: nome,
+      email: email,
+      documento: doc,
+      data: data,
+      senha: senha
+    });
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    
+    mostrarMsg('✅ Monitor cadastrado com sucesso!', 'sucesso');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 2000);
+  }
+}
+
+function mostrarMsg(msg, tipo) {
+  let div = document.getElementById('mensagem');
+  div.innerHTML = `<div class="${tipo}">${msg}</div>`;
+  setTimeout(() => {
+    div.innerHTML = '';
+  }, 3000);
+}
+</script>
 
 </body>
 </html>

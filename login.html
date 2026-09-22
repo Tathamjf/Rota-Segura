@@ -38,10 +38,19 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     var usuario = document.getElementById('usuario').value;
     var senha = document.getElementById('senha').value;
     
-    // Apenas conta de responsável
+    // Conta de Responsável
     if(usuario === "responsavel" && senha === "123") {
-        window.location.href ="funcionamento.html";
-    } else {
+        window.location.href = "responsavel.html";
+    } 
+    // Conta de Motorista
+    else if(usuario === "motorista" && senha === "123") {
+        window.location.href = "motorista.html";
+    }
+    // Conta de Monitor
+    else if(usuario === "monitor" && senha === "123") {
+        window.location.href = "monitor.html";
+    }
+    else {
         alert("❌ Usuário ou senha incorretos!");
     }
 });

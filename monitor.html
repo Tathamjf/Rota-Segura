@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Rota Segura - Monitor</title>
+    <link rel="stylesheet" type="text/css" href="monitor.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="titulo">
+        <h1>🚍 Rota Segura</h1>
+        <p>Painel do Monitor</p>
+    </div>
+
+    <div class="card">
+        <div class="menu">
+            <button onclick="mudarTela('alunos')">Alunos por Rota</button>
+            <button onclick="mudarTela('imprevistos')"> Notificar Imprevisto</button>
+            <button onclick="mudarTela('ausencias')"> Ausências Autorizadas</button>
+            <button onclick="mudarTela('historico')"> Histórico do Dia</button>
+            <button onclick="sair()" class="btn-sair"> Sair</button>
+        </div>
+
+        <!-- Tela Alunos por Rota -->
+        <div id="telaAlunos" class="conteudo">
+            <h2>Alunos por Rota</h2>
+            <div class="form-group">
+                <label>Selecione a Rota:</label>
+                <select id="selectRota" onchange="carregarAlunos()">
+                    <option value="">-- Selecione --</option>
+                    <option value="sul">Rota Sul</option>
+                    <option value="norte">Rota Norte</option>
+                </select>
+            </div>
+            <div id="listaAlunos" class="lista"></div>
+            <button onclick="salvarPresenca()" class="btn-primary" style="margin-top: 15px;"> Salvar Presença</button>
+            <div id="msgPresenca" class="feedback"></div>
+        </div>
+
+        <!-- Tela Notificar Imprevisto -->
+        <div id="telaImprevistos" class="conteudo esconder">
+            <h2>Notificar Imprevisto</h2>
+            <div class="form-group">
+                <label>Data:</label>
+                <input type="date" id="dataImprevisto">
+            </div>
+            <div class="form-group">
+                <label>Rota:</label>
+                <select id="selectRotaImprevisto">
+                    <option value="">-- Selecione --</option>
+                    <option value="sul">Rota Sul</option>
+                    <option value="norte">Rota Norte</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tipo de Imprevisto:</label>
+                <select id="tipoImprevisto">
+                    <option value="" disabled selected>-- Selecione --</option>
+                    <option>Trânsito intenso</option>
+                    <option>Problema mecânico</option>
+                    <option>Acidente</option>
+                    <option>Aluno não localizado</option>
+                    <option>Atraso na saída</option>
+                    <option>Outro</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Descrição Detalhada:</label>
+                <textarea id="descImprevisto" rows="4" placeholder="Descreva o ocorrido em detalhes..." style="width:100%; padding:10px; border-radius:8px;"></textarea>
+            </div>
+            <button onclick="registrarImprevisto()" class="btn-primary">Registrar Imprevisto</button>
+            <div id="msgImprevisto" class="feedback"></div>
+        </div>
+
+        <!-- Tela Ausências Autorizadas -->
+        <div id="telaAusencias" class="conteudo esconder">
+            <h2>Ausências Autorizadas</h2>
+            <div id="listaAusencias" class="lista">
+                <div class="notificacao">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>Agatha Moreira</strong>
+                        <small>15/03/2024</small>
+                    </div>
+                    <div>Motivo: Problemas de saúde - Consulta médica</div>
+                    <div style="margin-top:5px; color:orange;"> Status: Ausência autorizada</div>
+                </div>
+                <div class="notificacao">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>Henrique Ribeiro</strong>
+                        <small>16/03/2024</small>
+                    </div>
+                    <div>Motivo: Compromissos pessoais - Viagem</div>
+                    <div style="margin-top:5px; color:orange;">Status: Ausência autorizada</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela Histórico do Dia -->
+        <div id="telaHistorico" class="conteudo esconder">
+            <h2> Histórico do Dia</h2>
+            <div id="listaHistorico" class="lista">
+                <div class="notificacao">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>Presença registrada</strong>
+                        <small>Hoje 07:30</small>
+                    </div>
+                    <div>Rota Sul - Todos os alunos presentes</div>
+                </div>
+                <div class="notificacao">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>Imprevisto</strong>
+                        <small>Hoje 07:15</small>
+                    </div>
+                    <div>Trânsito intenso na Av. Principal - Atraso de 10min</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Dados dos alunos por rota
+    let alunosPorRota = {
+        sul: [
+            { nome: "Agatha Moreira", embarcou: false, desembarcou: false },
+            { nome: "Fellipe Augusto", embarcou: false, desembarcou: false },
+            { nome: "Sabrina Gonçalves", embarcou: false, desembarcou: false }
+        ],
+        norte: [
+            { nome: "Henrique Ribeiro", embarcou: false, desembarcou: false },
+            { nome: "Luísa Herrera", embarcou: false, desembarcou: false }
+        ]
+    };
+    
+    let historico = [];
+    let imprevistos = [];
+
+    function mudarTela(tela) {
+        document.querySelectorAll('.conteudo').forEach(div => {
+            div.classList.add('esconder');
+        });
+        
+        if(tela === 'alunos') {
+            document.getElementById('telaAlunos').classList.remove('esconder');
+        }
+        else if(tela === 'imprevistos') {
+            document.getElementById('telaImprevistos').classList.remove('esconder');
+        }
+        else if(tela === 'ausencias') {
+            document.getElementById('telaAusencias').classList.remove('esconder');
+        }
+        else if(tela === 'historico') {
+            document.getElementById('telaHistorico').classList.remove('esconder');
+            atualizarHistorico();
+        }
+    }
+    
+    function carregarAlunos() {
+        let rota = document.getElementById('selectRota').value;
+        let div = document.getElementById('listaAlunos');
+        
+        if(!rota) {
+            div.innerHTML = '<p>Selecione uma rota</p>';
+            return;
+        }
+        
+        let alunos = alunosPorRota[rota];
+        let html = '<h3 style="margin-bottom:15px;">Alunos da rota:</h3>';
+        
+        for(let i = 0; i < alunos.length; i++) {
+            let aluno = alunos[i];
+            let status = "";
+            if(aluno.embarcou && aluno.desembarcou) {
+                status = " Completou o trajeto";
+            } else if(aluno.embarcou) {
+                status = " No ônibus";
+            } else {
+                status = " Aguardando embarque";
+            }
+            
+            html += `
+                <div class="item-dep" style="flex-direction:column; align-items:flex-start;">
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <span class="nome">${aluno.nome}</span>
+                        <span style="font-size:12px;">${status}</span>
+                    </div>
+                    <div style="margin-top:10px;">
+                        <button onclick="marcarEmbarque(${i})" style="background: ${aluno.embarcou ? '#28a745' : '#0f247e'}">
+                            ${aluno.embarcou ? ' Já embarcou' : ' Marcar Embarque'}
+                        </button>
+                        <button onclick="marcarDesembarque(${i})" style="background: ${aluno.desembarcou ? '#dc3545' : '#0f247e'}; margin-left:10px;">
+                            ${aluno.desembarcou ? ' Já desembarcou' : ' Marcar Desembarque'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        div.innerHTML = html;
+    }
+    
+    function marcarEmbarque(index) {
+        let rota = document.getElementById('selectRota').value;
+        if(rota) {
+            alunosPorRota[rota][index].embarcou = true;
+            carregarAlunos();
+        }
+    }
+    
+    function marcarDesembarque(index) {
+        let rota = document.getElementById('selectRota').value;
+        if(rota) {
+            alunosPorRota[rota][index].desembarcou = true;
+            carregarAlunos();
+        }
+    }
+    
+    function salvarPresenca() {
+        let rota = document.getElementById('selectRota').value;
+        if(!rota) {
+            document.getElementById('msgPresenca').innerHTML = '<div class="feedback erro">Selecione uma rota!</div>';
+            setTimeout(() => document.getElementById('msgPresenca').innerHTML = '', 2000);
+            return;
+        }
+        
+        let alunos = alunosPorRota[rota];
+        let embarcados = alunos.filter(a => a.embarcou).length;
+        let desembarcados = alunos.filter(a => a.desembarcou).length;
+        
+        let texto = `Rota ${rota.toUpperCase()} - ${embarcados}/${alunos.length} embarcaram, ${desembarcados}/${alunos.length} desembarcaram`;
+        
+        historico.unshift({
+            tipo: "✅ Presença",
+            descricao: texto,
+            data: new Date().toLocaleString()
+        });
+        
+        document.getElementById('msgPresenca').innerHTML = '<div class="feedback sucesso">Presença salva com sucesso!</div>';
+        setTimeout(() => document.getElementById('msgPresenca').innerHTML = '', 2000);
+    }
+    
+    function registrarImprevisto() {
+        let data = document.getElementById('dataImprevisto').value;
+        let rota = document.getElementById('selectRotaImprevisto').value;
+        let tipo = document.getElementById('tipoImprevisto').value;
+        let descricao = document.getElementById('descImprevisto').value;
+        
+        if(!tipo) {
+            document.getElementById('msgImprevisto').innerHTML = '<div class="feedback erro">Selecione o tipo de imprevisto!</div>';
+            setTimeout(() => document.getElementById('msgImprevisto').innerHTML = '', 2000);
+            return;
+        }
+        
+        if(!descricao) {
+            document.getElementById('msgImprevisto').innerHTML = '<div class="feedback erro">Descreva o imprevisto!</div>';
+            setTimeout(() => document.getElementById('msgImprevisto').innerHTML = '', 2000);
+            return;
+        }
+        
+        let dataTexto = data ? data : new Date().toLocaleDateString();
+        let rotaTexto = rota ? `Rota ${rota.toUpperCase()}` : "Todas as rotas";
+        
+        let texto = `${rotaTexto} - ${tipo}: ${descricao}`;
+        
+        imprevistos.unshift({
+            tipo: "⚠️ Imprevisto",
+            descricao: texto,
+            data: new Date().toLocaleString()
+        });
+        
+        historico.unshift({
+            tipo: "⚠️ Imprevisto",
+            descricao: texto,
+            data: new Date().toLocaleString()
+        });
+        
+        document.getElementById('msgImprevisto').innerHTML = '<div class="feedback sucesso">Imprevisto registrado!</div>';
+        setTimeout(() => document.getElementById('msgImprevisto').innerHTML = '', 2000);
+        
+        document.getElementById('dataImprevisto').value = '';
+        document.getElementById('selectRotaImprevisto').value = '';
+        document.getElementById('tipoImprevisto').value = '';
+        document.getElementById('descImprevisto').value = '';
+    }
+    
+    function atualizarHistorico() {
+        let div = document.getElementById('listaHistorico');
+        
+        if(historico.length === 0 && imprevistos.length === 0) {
+            div.innerHTML = '<p>Nenhum registro no dia de hoje</p>';
+            return;
+        }
+        
+        let html = '';
+        
+        // Mostra os registros do histórico
+        for(let i = 0; i < historico.length; i++) {
+            let item = historico[i];
+            html += `
+                <div class="notificacao">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>${item.tipo}</strong>
+                        <small>${item.data}</small>
+                    </div>
+                    <div style="margin-top:5px;">${item.descricao}</div>
+                </div>
+            `;
+        }
+        
+        div.innerHTML = html;
+    }
+    
+    window.sair = function() {
+        if(confirm('Sair do sistema?')) {
+            window.location.href = 'login.html';
+        }
+    };
+    
+    // Começa na tela de alunos
+    mudarTela('alunos');
+    
+    // Deixar as funções globais
+    window.carregarAlunos = carregarAlunos;
+    window.marcarEmbarque = marcarEmbarque;
+    window.marcarDesembarque = marcarDesembarque;
+    window.salvarPresenca = salvarPresenca;
+    window.registrarImprevisto = registrarImprevisto;
+    window.atualizarHistorico = atualizarHistorico;
+</script>
+
+</body>
+</html>

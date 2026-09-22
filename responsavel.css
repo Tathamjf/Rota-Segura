@@ -1,0 +1,200 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #0f247e, #18295e);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* título */
+        .titulo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .titulo h1 {
+            color: white;
+            font-size: 36px;
+        }
+
+        .titulo p {
+            color: orange;
+            margin-top: 5px;
+        }
+
+        /* card */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            min-height: 450px;
+        }
+
+        /* menu botões */
+        .menu {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .menu button {
+            background: #0f247e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .menu button:hover {
+            background: orange;
+            color: #0f247e;
+        }
+
+        .btn-sair {
+            background: #dc3545 !important;
+        }
+
+        /* lista dependentes */
+        .lista {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .item-dep {
+            background: #f5f5f5;
+            padding: 12px 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid orange;
+        }
+
+        .nome {
+            font-weight: bold;
+            color: #0f247e;
+            font-size: 16px;
+        }
+
+        .status {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .presente {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .ausente {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        button {
+            background: #0f247e;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+
+        button:hover {
+            background: orange;
+            color: #0f247e;
+        }
+
+        /* formulário */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: orange;
+            color: #0f247e;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .notificacao {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 4px solid orange;
+        }
+
+        .rota-box {
+            text-align: center;
+            padding: 30px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .sucesso {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .erro {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #0f247e;
+            font-size: 22px;
+            border-left: 4px solid orange;
+            padding-left: 12px;
+        }
+
+        .esconder {
+            display: none;
+        }

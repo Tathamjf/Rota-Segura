@@ -112,3 +112,22 @@ button {
   width: stretch;
 }
 
+.btn-voltar {
+      background: transparent;
+      border: 2px solid #e26f11 ;
+      color: #e26f11 ;
+      margin-top: 10px;
+      padding: 10px ;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      width: 100%;
+    }
+    
+    .btn-voltar:hover {
+      background: #e26f11;
+      color: white;
+      transform: scale(1.02);
+    }
